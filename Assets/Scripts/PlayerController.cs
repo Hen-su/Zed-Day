@@ -12,12 +12,14 @@ public class PlayerController : MonoBehaviour
 
     private Animator anim;
     private CharacterController controller;
+    private float playerSpeed;
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         mainCamera = FindObjectOfType<FollowPlayer>();
+        playerSpeed = moveSpeed;
     }
 
     // Update is called once per frame
@@ -31,29 +33,33 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler( 0f, targetAngle, 0f);*/
         
         //Movement
-        if (Input.GetKey("w"))
+        if (Input.GetKey(KeyCode.W))
         {
             anim.SetTrigger("Run");
-            controller.Move(Vector3.forward * moveSpeed * Time.deltaTime);
+            controller.Move(Vector3.forward * playerSpeed * Time.deltaTime);
         }
-        if (Input.GetKey("s"))
+        if (Input.GetKey(KeyCode.S))
         {
             anim.SetTrigger("Run");
-            controller.Move(Vector3.back * moveSpeed * Time.deltaTime);
+            controller.Move(Vector3.back * playerSpeed * Time.deltaTime);
         }
-        if (Input.GetKey("a"))
+        if (Input.GetKey(KeyCode.A))
         {
             anim.SetTrigger("Run");
-            controller.Move(Vector3.left * moveSpeed * Time.deltaTime);
+            controller.Move(Vector3.left * playerSpeed * Time.deltaTime);
         }
-        if (Input.GetKey("d"))
+        if (Input.GetKey(KeyCode.D))
         {
             anim.SetTrigger("Run");
-            controller.Move(Vector3.right * moveSpeed * Time.deltaTime);
+            controller.Move(Vector3.right * playerSpeed * Time.deltaTime);
         }
-        if (Input.GetKey("Left Shift"))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            moveSpeed = sprintSpeed;
+            playerSpeed = sprintSpeed;
+        }
+        else
+        {
+            playerSpeed = moveSpeed;
         }
         if (!Input.anyKey)
         {
