@@ -22,16 +22,8 @@ public class PlayerController : MonoBehaviour
         playerSpeed = moveSpeed;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Movement()
     {
-        //Player Rotation with WASD
-        /*float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler( 0f, targetAngle, 0f);*/
-        
         //Movement
         if (Input.GetKey(KeyCode.W))
         {
@@ -66,6 +58,10 @@ public class PlayerController : MonoBehaviour
             anim.ResetTrigger("Run");
             anim.Play("m_weapon_idle_A");
         }
+    }
+
+    private void PlayerRotation()
+    {
         //Player Rotation with mouse
         Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -75,5 +71,18 @@ public class PlayerController : MonoBehaviour
             Vector3 pointToLook = cameraRay.GetPoint(raylength);
             transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
         }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Player Rotation with WASD
+        /*float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler( 0f, targetAngle, 0f);*/
+        Movement();
+        PlayerRotation();
     }
 }
