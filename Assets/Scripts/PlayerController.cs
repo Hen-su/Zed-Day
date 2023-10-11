@@ -10,15 +10,18 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     public float sprintSpeed;
     public float smooth = 0.1f;
-    public GameObject bullet;
-    public Vector3 pointToLook;
-    public GameObject barrelEnd;
-    public float speed;
-
+    public float maxHealth;
+    public float maxStamina;
+    public float staminaDrain;
+    public float restTime;
+    
+    public float currentHealth;
+    public float currentStamina;
     private Animator anim;
     private CharacterController controller;
     private float playerSpeed;
-    
+    private bool resting;
+    private Vector3 pointToLook;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +29,9 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         mainCamera = FindObjectOfType<FollowPlayer>();
         playerSpeed = moveSpeed;
+        currentHealth = maxHealth; 
+        currentStamina = maxStamina;
+        resting = false;
     }
 
     private void Movement()
@@ -51,14 +57,31 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("Run");
             controller.Move(Vector3.right * playerSpeed * Time.deltaTime);
         }
+        //Sprinting functionality
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            playerSpeed = sprintSpeed;
+            if (currentStamina <= 0 )
+            {
+                playerSpeed = moveSpeed;
+                StartCoroutine(GainStamina());
+                return;
+            }
+            if (currentStamina > 0)
+            {
+                playerSpeed = sprintSpeed;
+                currentStamina -= staminaDrain*Time.deltaTime;
+            }
+            if (resting)
+            {
+                return;
+            }
+            
         }
         else
         {
             playerSpeed = moveSpeed;
         }
+        //Idle and Running animations
         if (!Input.anyKey)
         {
             anim.ResetTrigger("Run");
@@ -78,17 +101,18 @@ public class PlayerController : MonoBehaviour
             transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
         }
     }
-
+    //Coroutine to regain stamina
+    IEnumerator GainStamina()
+    {
+        resting = true;
+        yield return new WaitForSeconds(restTime);
+        currentStamina = maxStamina;
+        resting = false;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        //Player Rotation with WASD
-        /*float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler( 0f, targetAngle, 0f);*/
         Movement();
         PlayerRotation();
     }
