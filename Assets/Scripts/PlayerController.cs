@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameManager GameManager;
     public GameObject character;
     public FollowPlayer mainCamera;
     public float moveSpeed;
     public float sprintSpeed;
     public float smooth = 0.1f;
+    public GameObject bullet;
+    public Vector3 pointToLook;
+    public GameObject barrelEnd;
+    public float speed;
 
     private Animator anim;
     private CharacterController controller;
     private float playerSpeed;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -68,10 +74,11 @@ public class PlayerController : MonoBehaviour
         float raylength;
         if (groundPlane.Raycast(cameraRay, out raylength))
         {
-            Vector3 pointToLook = cameraRay.GetPoint(raylength);
+            pointToLook = cameraRay.GetPoint(raylength);
             transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
         }
     }
+
 
     // Update is called once per frame
     void Update()
