@@ -17,6 +17,7 @@ public class ZombieController : MonoBehaviour
     private Animator anim;
     private CharacterController controller;
     private GameObject target;
+    private bool isAttacking;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,7 @@ public class ZombieController : MonoBehaviour
         anim = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         currentHealth = maxHealth;
+        isAttacking = false;
     }
 
     private void UpdateHealth()
@@ -38,29 +40,24 @@ public class ZombieController : MonoBehaviour
         }
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log(hit.gameObject.tag);
+        if (hit.gameObject.tag == "Soldier")
+        {
+            Debug.Log("attacking");
+            Attack();
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         if (collision.gameObject.tag == "Bullet")
         {
             Debug.Log("Hit by Bullet");
             DecreaseHealth();
             Debug.Log(currentHealth);
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            attack();
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            attack();
         }
     }
 
@@ -83,10 +80,16 @@ public class ZombieController : MonoBehaviour
         }
     }
 
-    void attack()
+    void Attack()
     {
-
+        isAttacking = true;
+        anim.ResetTrigger("Walk");
         anim.SetTrigger("Attack");
+    }
+
+    public void StopAttack()
+    {
+        isAttacking = false;
     }
 
     void Movement()
@@ -103,9 +106,13 @@ public class ZombieController : MonoBehaviour
     {
         if (currentHealth > 0)
         {
-            target = GameObject.FindWithTag("Soldier");
-            Debug.Log(target.transform.position);
-            Movement();
+            if (isAttacking == false)
+            {
+                target = GameObject.FindWithTag("Soldier");
+                //Debug.Log(target.transform.position);
+                Movement();
+            }
+            
         }
         Death();
     }

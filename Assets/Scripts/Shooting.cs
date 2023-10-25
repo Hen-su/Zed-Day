@@ -11,16 +11,18 @@ public class Shooting : MonoBehaviour
     public float reloadTime;
     public float speed;
     bool isReloading;
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         isReloading = false;
         currentAmmo = maxAmmo;
+        animator = GetComponent<Animator>();
     }
 
 
-    private void Shoot()
+    public void Shoot()
     {
         if (isReloading)
         {

@@ -34,6 +34,15 @@ public class PlayerController : MonoBehaviour
         resting = false;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "ZombieArms")
+        {
+            DecreaseHealth();
+        }
+    }
+
+
     private void Movement()
     {
         //Movement
@@ -85,7 +94,7 @@ public class PlayerController : MonoBehaviour
         if (!Input.anyKey)
         {
             anim.ResetTrigger("Run");
-            anim.Play("m_weapon_idle_A");
+            anim.SetTrigger("Idle");
         }
     }
 
@@ -108,6 +117,18 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(restTime);
         currentStamina = maxStamina;
         resting = false;
+    }
+
+    void DecreaseHealth()
+    {
+        if (currentHealth > 0)
+        {
+            currentHealth -= 10;
+        }
+        if (currentHealth <= 0)
+        {
+            anim.SetTrigger("Death");
+        }
     }
 
     // Update is called once per frame
