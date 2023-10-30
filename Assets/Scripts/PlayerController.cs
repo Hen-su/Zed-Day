@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameManager GameManager;
-    public GameObject character;
-    public FollowPlayer mainCamera;
+    public GameUI gameUI;
+    public FollowPlayer follow;
+    private GameObject character;
     public float moveSpeed;
     public float sprintSpeed;
     public float smooth = 0.1f;
@@ -14,34 +15,82 @@ public class PlayerController : MonoBehaviour
     public float maxStamina;
     public float staminaDrain;
     public float restTime;
+    public float deathDelay;
+    public GameObject rifle;
+    public GameObject pistol;
+    public GameObject machineGun;
+    public int money;
+    public int zombieHitMoney;
     
     public float currentHealth;
     public float currentStamina;
+
     private Animator anim;
     private CharacterController controller;
     private float playerSpeed;
     private bool resting;
     private Vector3 pointToLook;
+    private int activeChildIndex;
+
     // Start is called before the first frame update
     void Start()
     {
-        anim = GetComponent<Animator>();
-        controller = GetComponent<CharacterController>();
-        mainCamera = FindObjectOfType<FollowPlayer>();
+        activeChildIndex = 0;
+        character = transform.GetChild(activeChildIndex).transform.gameObject;
+        anim = transform.GetChild(activeChildIndex).gameObject.GetComponent<Animator>();
+        controller = transform.GetChild(activeChildIndex).gameObject.GetComponent<CharacterController>();
         playerSpeed = moveSpeed;
         currentHealth = maxHealth; 
         currentStamina = maxStamina;
+        money = 0;
         resting = false;
+        
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void GetActivePlayerPrefab()
     {
-        if (other.tag == "ZombieArms")
+        for (int i = 0; i < transform.childCount; i++)
         {
-            DecreaseHealth();
+            if (transform.GetChild(i).gameObject.activeSelf == true)
+            {
+                activeChildIndex = i;
+            }
         }
     }
 
+    public void ChangePrefab(string gun)
+    {
+        switch (gun)
+        {
+            case "Rifle":
+                rifle.transform.position = character.transform.position;
+                character.SetActive(false);
+                rifle.SetActive(true);
+                gameUI.GetActivePlayerPrefab();
+                follow.GetActivePlayerPrefab();
+                GetActivePlayerPrefab();
+
+                character = transform.GetChild(activeChildIndex).transform.gameObject;
+                anim = transform.GetChild(activeChildIndex).gameObject.GetComponent<Animator>();
+                controller = transform.GetChild(activeChildIndex).gameObject.GetComponent<CharacterController>();
+                break;
+            case "MachineGun":
+                machineGun.transform.position = character.transform.position;
+                character.SetActive(false);
+                machineGun.SetActive(true);
+                gameUI.GetActivePlayerPrefab();
+                follow.GetActivePlayerPrefab();
+                GetActivePlayerPrefab();
+
+                character = transform.GetChild(activeChildIndex).transform.gameObject;
+                anim = transform.GetChild(activeChildIndex).gameObject.GetComponent<Animator>();
+                controller = transform.GetChild(activeChildIndex).gameObject.GetComponent<CharacterController>();
+                break;
+            default:
+                break;
+        }
+            
+    }
 
     private void Movement()
     {
@@ -89,6 +138,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerSpeed = moveSpeed;
+            RegenStamina();
         }
         //Idle and Running animations
         if (!Input.anyKey)
@@ -107,7 +157,7 @@ public class PlayerController : MonoBehaviour
         if (groundPlane.Raycast(cameraRay, out raylength))
         {
             pointToLook = cameraRay.GetPoint(raylength);
-            transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
+            transform.GetChild(activeChildIndex).transform.LookAt(new Vector3(pointToLook.x, transform.GetChild(activeChildIndex).transform.position.y, pointToLook.z));
         }
     }
     //Coroutine to regain stamina
@@ -119,22 +169,47 @@ public class PlayerController : MonoBehaviour
         resting = false;
     }
 
-    void DecreaseHealth()
+    void RegenStamina()
+    {
+        if (currentStamina < maxStamina)
+        {
+            currentStamina += staminaDrain * Time.deltaTime;
+        }
+    }
+
+    public void IncreaseMoney()
+    {
+        money += zombieHitMoney;
+    }
+
+
+    public void DecreaseHealth(float damage)
     {
         if (currentHealth > 0)
         {
-            currentHealth -= 10;
+            currentHealth -= damage;
+            
         }
         if (currentHealth <= 0)
         {
-            anim.SetTrigger("Death");
+            StartCoroutine(Death());
         }
+    }
+
+    IEnumerator Death()
+    {
+        anim.SetTrigger("Death");
+        yield return new WaitForSeconds(deathDelay);
+        SceneManager.LoadScene("GameOverScene");
     }
 
     // Update is called once per frame
     void Update()
     {
-        Movement();
-        PlayerRotation();
+        if (currentHealth > 0)
+        {
+            Movement();
+            PlayerRotation();
+        }
     }
 }

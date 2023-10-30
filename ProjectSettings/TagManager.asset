@@ -7,6 +7,15 @@ TagManager:
   - Bullet
   - Soldier
   - ZombieArms
+  - RiflePlayer
+  - PistolPlayer
+  - AssaultPlayer
+  - MachineGunPlayer
+  - MachineGun
+  - Civilian
+  - Rifle
+  - Zombie
+  - CivilianWeapon
   layers:
   - Default
   - TransparentFX

@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 2335633434760702876}
   - component: {fileID: 3969949106197071213}
   - component: {fileID: 7037131166457357591}
-  - component: {fileID: 7356565601034350227}
+  - component: {fileID: -3700369680147805757}
+  - component: {fileID: -6470531385707373954}
   m_Layer: 0
   m_Name: TT_demo_zombie 1 1 1
-  m_TagString: Untagged
+  m_TagString: Zombie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,7 +52,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 711995d711346094ea74c3b9d9248901, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -97,36 +98,146 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95935f5feab4f14ba74b2e6d89a0b74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playercontroller: {fileID: 0}
   maxHealth: 100
-  moveSpeed: 1.5
+  moveSpeed: 2
   attackDist: 0
   damage: 20
   attackDelay: 0
   destroyDelay: 10
   healthbar: {fileID: 6975725980178361737}
---- !u!136 &7356565601034350227
-CapsuleCollider:
+  bulletDamage: 15
+  meleeDamage: 5
+  navMeshAgent: {fileID: -3700369680147805757}
+  characterControllerList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  hitAudio: {fileID: 8300000, guid: d65b81d6b848b467da29dab292d5ac66, type: 3}
+  zombieDeath: {fileID: 8300000, guid: 137bb003119aa47dfb5ed791d840d650, type: 3}
+  zombieSpawn: {fileID: 8300000, guid: 2628db55e50fe41cc9879051d359847a, type: 3}
+  audioSource: {fileID: -6470531385707373954}
+--- !u!195 &-3700369680147805757
+NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 707769051978002588}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
+  m_Enabled: 0
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!82 &-6470531385707373954
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707769051978002588}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5223503
-  m_Height: 1.8043841
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.89969164, z: 0.022350311}
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &826551166790939109
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,7 +1569,7 @@ GameObject:
   - component: {fileID: 6834771788454496913}
   m_Layer: 0
   m_Name: R_hand_container
-  m_TagString: Untagged
+  m_TagString: ZombieArms
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
